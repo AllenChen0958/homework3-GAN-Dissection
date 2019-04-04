@@ -2,8 +2,9 @@
 ===
 
 ## Abstract
-GAN Dissectiong使用視覺化探討GAN內部不同layer中的每個神經元在幹什麼，透過找出關聯性可以在特定位置透過提高特定神經元的輸出來產生特定特徵於圖片中，甚至能找到壞掉的神經元，移除後改善輸出品質。
-本次報告會介紹基本GAN-Dissection這篇論文的內容，並且實際用來分析GAN model，討論神經元的一些有趣現象，最後與其他用於移除場景中特定物件的方法進行比較，並在最後做一些跟影像辨識有關的延伸討論。
+- GAN Dissectiong使用視覺化探討GAN內部不同layer中的每個神經元在幹什麼，透過找出關聯性可以在特定位置透過提高特定神經元的輸出來產生特定特徵於圖片中，甚至能找到壞掉的神經元，移除後改善輸出品質。
+- 本次報告會介紹基本GAN-Dissection這篇論文的內容，並且實際用來分析GAN model，討論神經元的一些有趣現象，最後與其他用於移除場景中特定物件的方法進行比較，並在最後做一些跟影像辨識有關的延伸討論。
+- 本文結論中發現在Dissect、Contextual Attention、opencv(NS)、opencv(TA)效果評比，以Dissect輸出影像最佳。
 
 Keyword: GAN Dissection, GANpaint
 ## Table of Contents
@@ -12,18 +13,20 @@ Keyword: GAN Dissection, GANpaint
 3. [Generate images with GANPaint](#Generate-Images-with-GANPaint)
 4. [Dissect GAN Model and Analyze](#Dissect-GAN-Model-and-Analyze)
 5. [Compare Method](#Compare-Method)
-6. [延伸補充](#延伸補充)
+6. [總結](#總結)
+7. [延伸補充](#延伸補充)
+8. [Reference](#Reference)
 ## Introduction
-生成對抗網路(Generative Adversarial Networks, GAN)，近年來於實務應用中有許多令人矚目的成果，並且有很多新的GAN出現，在樣本的品質(Sample quality)與訓練穩定性(Training stability)上均有得到大幅改善，但是卻沒有可視化或理解。
-GAN有許多問題，例如如何在內部代表我們視覺世界?如何影響GAN學習?解決這些問題有助於發現更多新的解析與建立更好的模型。因此GAN-Dissection的作者提出一個分析框架，對GAN在神經元、對象與場景等進行可視化與解析。
-首先使用基於分割的網路剖析方法識別與對象概念關聯度高的一組神經元(Unit)。然後透過測量干擾輸出特徵像(Feature map)的能力，量化可解釋的因果關係。
-此外透過觸發神經元於背景的指定位置，還可以將特定特徵插入圖片中特定位置。
-甚至透過對每個神經元進行分析，可以找出哪些神經元是會產生artifact的壞的神經元，移除後可以改善Generator的輸出品質。
+- 生成對抗網路(Generative Adversarial Networks, GAN)，近年來於實務應用中有許多令人矚目的成果，並且有很多新的GAN出現，在樣本的品質(Sample quality)與訓練穩定性(Training stability)上均有得到大幅改善，但是卻沒有可視化或理解。
+- GAN有許多問題，例如如何在內部代表我們視覺世界?如何影響GAN學習?解決這些問題有助於發現更多新的解析與建立更好的模型。因此GAN-Dissection的作者提出一個分析框架，對GAN在神經元、對象與場景等進行可視化與解析。
+- 首先使用基於分割的網路剖析方法識別與對象概念關聯度高的一組神經元(Unit)。然後透過測量干擾輸出特徵像(Feature map)的能力，量化可解釋的因果關係。
+- 此外透過觸發神經元於背景的指定位置，還可以將特定特徵插入圖片中特定位置。
+- 甚至透過對每個神經元進行分析，可以找出哪些神經元是會產生artifact的壞的神經元，移除後可以改善Generator的輸出品質。
 
 ## GAN Dissection論文要點
 - 可以依照我們期望，生成出期望的場景。
 - 提出可視化方式，體驗GAN神經元在學習甚麼?
-- 自動辨識哪些神經元輸出結果不好，或辨識到會產生扭曲的神經元， 均可-將它設為0。
+- 辨識哪些神經元輸出結果不好，或辨識到會產生扭曲的神經元， 均可-將它設為0。
 - 具有可互動框架，自適性調整字元，產生新增或移除的類別(Class)功能。
 - 某項類別對應神經元(Unit、Channel、Feature map)，代表意義?
 - 每個物件(Object)對應哪些神經元。
@@ -35,7 +38,7 @@ GAN有許多問題，例如如何在內部代表我們視覺世界?如何影響G
 
 ### GANpaint
 
-GANpaint 是一套APP，左邊的各個按鈕如Tree、grass、door、sky、cloud..對應到20組神經元。GANpaint是直接啟動或停用指定位置深度學習網路的神經元集合，產生增加或移除特定物件，如移除樹、增加草地。
+[GANPaint](http://gandissect.res.ibm.com/ganpaint.html?project=churchoutdoor&layer=layer4) 是一套APP，左邊的各個按鈕如Tree、grass、door、sky、cloud..對應到20組神經元。GANpaint是直接啟動或停用指定位置深度學習網路的神經元集合，產生增加或移除特定物件，如移除樹、增加草地。
 
 
 ### 解開(Dissection)
@@ -45,7 +48,7 @@ GANpaint 是一套APP，左邊的各個按鈕如Tree、grass、door、sky、clou
 在圖片生成過程，首先輸入雜訊z，再生成圖片x。因此z是經過一層層的r(layer)生成x，逐漸轉成圖片。
 ![](https://i.imgur.com/JP19Gnf.png)
 
-令其中一層的feature maps為 r ，u為其中一個unit(其負責feature maps 其中一個channel)，u∈U,p∈P(畫面的pixels subset)，提出其中一個unit在特定pixels subset產生的feature map，透過upsample resize成照片大小，圈出activate大於特定玉質與產生圖片疊合，就能產生下面的截圖。
+令其中一層的feature maps為 r ，u為其中一個unit(其負責feature maps 其中一個channel)，u∈U,p∈P(畫面的pixels subset)，提出其中一個unit在特定pixels subset產生的feature map，透過upsample resize成照片大小，圈出activate大於特定閾值與產生圖片疊合，就能產生下面的截圖。
 
 ![](https://i.imgur.com/5YEcx0w.png)
 圖為layer=3 unit#54的其中一張疊合後圖片
@@ -72,7 +75,7 @@ GANpaint 是一套APP，左邊的各個按鈕如Tree、grass、door、sky、clou
 
 ## Generate Images with GANPaint
 1. Example Image add/remove tree
-以下是使用GANPaint對別墅做增加或移除樹(Tree)的結果截圖。
+以下是使用[GANPaint](http://gandissect.res.ibm.com/ganpaint.html?project=churchoutdoor&layer=layer4)對別墅做增加或移除樹(Tree)的結果截圖。
 
 |original|add|remove|
 |--|--|--|
@@ -124,7 +127,7 @@ layer 6
 ![](https://i.imgur.com/8xTY9a7.png)
 ![](https://i.imgur.com/0kzpiip.png)
 ![](https://i.imgur.com/RivF6R4.png)
-該層(layer6)可解釋unit種類較之前的層數(layer3)多了11個類別，且該曾多數的unit已經可將各個家具不同部位匡出(EX: 沙發的頂部)，顯示該層已可將家具進行語義分割，唯該次的有些大型輪廓開始出現雜訊(如上圖)。對於輪廓簡單的家庭配件來說，其IOU分數未必勝過較淺的層數。
+該層(layer6)可解釋unit種類較之前的層數(layer3)多了11個類別，且該曾多數的unit已經可將各個家具不同部位匡出(EX: 沙發的頂部)，顯示該層已可將家具進行語義分割，唯該次的有些大型輪廓開始出現雜訊(如上圖)。對於輪廓簡單的家庭配件來說，其IoU分數未必勝過較淺的層數。
 layer 9 
 ![](https://i.imgur.com/jPgvw1s.png)
 ![](https://i.imgur.com/yaeHb58.png)
@@ -210,17 +213,10 @@ opencv library有提供兩種方法
 
 - 總結：當有遇到小污點或是缺陷的圖，且運算資源有限的時候，適合用opencv的方式來消除；當有小區域模糊或被屏蔽，且整張圖相似結構多時，適合用Contextual Attention來消除。
 
-## Reference
-1. https://gandissect.csail.mit.edu/papers/gandissect-NECV-2018-abstract.pdf
-2. https://www.semanticscholar.org/paper/GP-GAN%3A-Towards-Realistic-High-Resolution-Image-Wu-Zheng/110ee8ab8f652c16fcc3bb767687e1c695c2500b
-3. https://blog.csdn.net/carson2005/article/details/6844025
-4. https://pdfs.semanticscholar.org/622d/5f432e515da69f8f220fb92b17c8426d0427.pdf
-5. https://zhuanlan.zhihu.com/p/24833574?fbclid=IwAR00o7VXL3TFpc6FGfbah2hwKgEUYSGesIxXmkilBPjCPbiSMPDcDVuU6WU
-6. https://cs.nyu.edu/~fergus/papers/zeilerECCV2014.pdf
-7. https://medium.com/@xiaosean5408/gan-dissection%E7%B0%A1%E4%BB%8B-visualizing-and-understanding-generative-adversarial-networks-37125f07d1cd
-8. https://www.sciencedirect.com/science/article/abs/pii/S0169743916304907
-9. https://pdfs.semanticscholar.org/622d/5f432e515da69f8f220fb92b17c8426d0427.pdf
-10. http://www.math.ucla.edu/~bertozzi/papers/cvpr01.pdf
+## 總結
+- 這次因為GAN-Dissection比較陌生，所以花比較多時間做相關論文的閱讀，也因此比較沒有對模型進行trace code並修改做出一些更有創意的嘗試，而是更多的著墨在使用這個GAN-Dissection後分析出的GAN model有哪些特別的現象。
+- model分析的部分只著墨兩個現象是因為這方面的整理比較明顯，但其實論文有提到一些比方說不同model training出來的unit種類不同，例如產生客廳場景的GAN model會有更多與沙發相關的unit能被定義出來，而產生廚房場景的則沒有；以及可以同unit能夠產生出來的沙發不論是顏色或材質都可以有很大的差異性，推測有學出概念的特徵，這些我們因為成果較難呈現就沒有放在分析內，有興趣的可以自己延伸閱讀或與我們討論。
+- 這次助教要求用GAN-Dissection與其他inpainting的方法進行比較，其實我們也遇到不少困難，在不去特別調整程式架構下對GAN-Dissection輸入特定照片的特徵不是容易的事情，所以我們是以GAN-Dissection產生的圖片丟到其他比較方法裡，而非選用自己的照片。
 
 ## 延伸補充
 GANDissection 的移出功能一種是標記特定區域移除指定unit集合產生移除特定class的效果，但同時透過完全去除所有位置特定unit集合，還能產生把畫面中所有樹移除的效果，但比較方法都是需要提供mask，也就是需要標記哪些位置需要移除，如果要達成移除畫面特定class的效果，應該還要在前面加入辨識系統，自動產生mask，最後也附上一些辨識系統的相關整理。
@@ -269,3 +265,14 @@ Selective Search for Object Recognition是運用Selective Search演算法在圖�
 |--|--|
 |![](https://i.imgur.com/CGaFQ90.jpg)|![](https://i.imgur.com/K59kmDT.jpg)|
 
+## Reference
+1. https://gandissect.csail.mit.edu/papers/gandissect-NECV-2018-abstract.pdf
+2. https://www.semanticscholar.org/paper/GP-GAN%3A-Towards-Realistic-High-Resolution-Image-Wu-Zheng/110ee8ab8f652c16fcc3bb767687e1c695c2500b
+3. https://blog.csdn.net/carson2005/article/details/6844025
+4. https://pdfs.semanticscholar.org/622d/5f432e515da69f8f220fb92b17c8426d0427.pdf
+5. https://zhuanlan.zhihu.com/p/24833574?fbclid=IwAR00o7VXL3TFpc6FGfbah2hwKgEUYSGesIxXmkilBPjCPbiSMPDcDVuU6WU
+6. https://cs.nyu.edu/~fergus/papers/zeilerECCV2014.pdf
+7. https://medium.com/@xiaosean5408/gan-dissection%E7%B0%A1%E4%BB%8B-visualizing-and-understanding-generative-adversarial-networks-37125f07d1cd
+8. https://www.sciencedirect.com/science/article/abs/pii/S0169743916304907
+9. https://pdfs.semanticscholar.org/622d/5f432e515da69f8f220fb92b17c8426d0427.pdf
+10. http://www.math.ucla.edu/~bertozzi/papers/cvpr01.pdf
