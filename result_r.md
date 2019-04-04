@@ -210,6 +210,17 @@ opencv library有提供兩種方法
 
 - 總結：當有遇到小污點或是缺陷的圖，且運算資源有限的時候，適合用opencv的方式來消除；當有小區域模糊或被屏蔽，且整張圖相似結構多時，適合用Contextual Attention來消除。
 
+## Reference
+1. https://gandissect.csail.mit.edu/papers/gandissect-NECV-2018-abstract.pdf
+2. https://www.semanticscholar.org/paper/GP-GAN%3A-Towards-Realistic-High-Resolution-Image-Wu-Zheng/110ee8ab8f652c16fcc3bb767687e1c695c2500b
+3. https://blog.csdn.net/carson2005/article/details/6844025
+4. https://pdfs.semanticscholar.org/622d/5f432e515da69f8f220fb92b17c8426d0427.pdf
+5. https://zhuanlan.zhihu.com/p/24833574?fbclid=IwAR00o7VXL3TFpc6FGfbah2hwKgEUYSGesIxXmkilBPjCPbiSMPDcDVuU6WU
+6. https://cs.nyu.edu/~fergus/papers/zeilerECCV2014.pdf
+7. https://medium.com/@xiaosean5408/gan-dissection%E7%B0%A1%E4%BB%8B-visualizing-and-understanding-generative-adversarial-networks-37125f07d1cd
+8. https://www.sciencedirect.com/science/article/abs/pii/S0169743916304907
+9. https://pdfs.semanticscholar.org/622d/5f432e515da69f8f220fb92b17c8426d0427.pdf
+10. http://www.math.ucla.edu/~bertozzi/papers/cvpr01.pdf
 
 ## 延伸補充
 GANDissection 的移出功能一種是標記特定區域移除指定unit集合產生移除特定class的效果，但同時透過完全去除所有位置特定unit集合，還能產生把畫面中所有樹移除的效果，但比較方法都是需要提供mask，也就是需要標記哪些位置需要移除，如果要達成移除畫面特定class的效果，應該還要在前面加入辨識系統，自動產生mask，最後也附上一些辨識系統的相關整理。
