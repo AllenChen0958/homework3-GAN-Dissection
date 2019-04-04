@@ -201,7 +201,7 @@ opencv library有提供兩種方法
 |--|--|--|--|--|
 |自由選擇input照片|x|o|o|o|
 |效果排名|1st|2nd|3rd|3rd|
-|速度|NaN|0.838sec|0.037sec|0.033sec|
+|速度|0.0756sec|0.838sec|0.037sec|0.033sec|
 |遮罩依賴|x|o|o|o|
 |需要pre-train|o|o|x|x|
 #### 討論
