@@ -34,7 +34,6 @@ Keyword: GAN Dissection, GANpaint
 - 是否存在Bias。
 
 可觀看影片近一步了解[GANDissection](https://openreview.net/pdf?id=Hyg_X2C5FX)概念。
-[![](http://img.youtube.com/vi/yVCgUYe4JTM/0.jpg)](http://www.youtube.com/watch?v=yVCgUYe4JTM )
 
 ### GANpaint
 
@@ -51,7 +50,7 @@ Keyword: GAN Dissection, GANpaint
 令其中一層的feature maps為 r ，u為其中一個unit(其負責feature maps 其中一個channel)，u∈U,p∈P(畫面的pixels subset)，提出其中一個unit在特定pixels subset產生的feature map，透過upsample resize成照片大小，圈出activate大於特定閾值與產生圖片疊合，就能產生下面的截圖。
 
 ![](https://i.imgur.com/5YEcx0w.png)
-圖為layer=3 unit#54的其中一張疊合後圖片
+<br/>圖為layer=3 unit#54的其中一張疊合後圖片
 
 與原圖片對特定class進行segmentation後的圖片可以進行IoU計算出該unit與特定class的關聯性，公式如下：
 
