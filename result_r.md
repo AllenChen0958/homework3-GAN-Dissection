@@ -225,7 +225,7 @@ opencv library有提供兩種方法
 ||Dissect|Contextual Attention|opencv(NS)|opencv(TA)|
 |--|--|--|--|--|
 |自由選擇input照片|x|o|o|o|
-|速度|NaN|0.838|0.037|0.033|
+|速度|0.0756|0.838|0.037|0.033|
 |遮罩依賴|x|o|o|o|
 |需要pre-train|o|o|x|x|
 |效果排名|1st|2nd|3rd|3rd|
